@@ -23,4 +23,8 @@ public abstract class Person {
 	public PersonType getType() {
 		return type;
 	}
+	
+	public void displayInfo() {
+		System.out.println("\n" + name + " " + state + " " + zipCode + " " + type.toString());
+	}
 }

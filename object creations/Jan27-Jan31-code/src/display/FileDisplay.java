@@ -55,7 +55,10 @@ public class FileDisplay {
 	{
 		FileIO singleton = FileIO.getInstance();
 		List<Person> personList = singleton.ReadFileAndBuildPeople();
-		
+		for(Person person : personList)
+		{
+			person.displayInfo();
+		}
     }
 	
 	// Ignore this it was just to test code for the factory

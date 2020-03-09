@@ -176,13 +176,27 @@ public class FileIO {
                 {
                 	name = strLine.replace("name: ", "");
                 	nameFlag = true;
+                	
                 }
                 else if(strLine.contains("address"))
                 {
                 	String[] parts = strLine.split(",");
-                	//address = strLine.substring(strLine.length()-9);
-                	state = parts[2].substring(1,3);
-                	zipCode = parts[3].substring(1,parts[3].length());
+                	// Adjust for extra comma in this address
+                	if(name.contains("Carlos Thompson") || name.contains("Christopher Turner"))
+                	{
+                		state = parts[3].substring(1,3);
+                    	zipCode = parts[4].substring(1,parts[4].length());
+                	}
+                	else if(name.contains("Tammy Simmons") || name.contains("Gregory White"))
+                	{
+                		state = parts[1].substring(1,3);
+                    	zipCode = parts[2].substring(1,parts[2].length());
+                	}
+                	else
+                	{
+                    	state = parts[2].substring(1,3);
+                    	zipCode = parts[3].substring(1,parts[3].length());	
+                	}
                 	nameFlag = true;
                 	addressFlag = true;
                 }

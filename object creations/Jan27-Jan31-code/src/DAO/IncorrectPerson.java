@@ -10,6 +10,6 @@ public class IncorrectPerson extends Person {
 	
 	@Override
 	protected void construct(String name) {
-		System.out.println("Building " + name + " as INCORRECT person");
+		//System.out.println("Building " + name + " as INCORRECT person");
 	}
 }

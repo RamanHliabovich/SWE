@@ -1,11 +1,17 @@
 package DAO;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -13,15 +19,21 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import display.FileDisplay;
+
 public class FileIO {
 
-	private static Map<String, String> map = new HashMap<String, String>();
+	private static Map<String, String> zipCodeMap = new HashMap<String, String>();
 
 	private static FileIO instance = null;
 
-	// Constructor
+	// Constructor that calls function to store excel file in map
 	private FileIO() {
-		
+		try {
+			zipCodeMap = storeExcelFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	// Enables singleton
@@ -33,13 +45,16 @@ public class FileIO {
 	}
 
 	// Read excel file return data in map
-	public static Map<String,String> storeExcelFile(InputStream fis) throws IOException {
+	public static Map<String,String> storeExcelFile() throws IOException {
 		Map<String,String> map = new HashMap<String,String>();
 		int rowCount = 0;
 		int colCount = 0;	
 		try
 		{
-			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			// Get excel file into InputStream object
+			InputStream input = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
+
+			XSSFWorkbook wb = new XSSFWorkbook(input);
 			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
 			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
 			while(itr.hasNext())
@@ -81,11 +96,11 @@ public class FileIO {
 							}	
 						}
 					}
-					if(state != null && zipCodeStart != null && zipCodeEnd != null)
-					{
-						zipCode = zipCodeStart + " " + zipCodeEnd; 
-						map.put(state, zipCode);	
-					}
+				}
+				if(state != null && zipCodeStart != null && zipCodeEnd != null)
+				{
+					zipCode = zipCodeStart + " " + zipCodeEnd; 
+					map.put(state, zipCode);	
 				}
 			}
 		}catch(Exception e)
@@ -97,10 +112,18 @@ public class FileIO {
 	
 	
 	// Use this to output excel file to console after it's read
-	public static void outputExcelFile(InputStream fis) throws IOException {
+	public static void outputExcelFile() throws IOException {
 		try
 		{
-			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			// Get excel file into InputStream object
+			InputStream input = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
+
+			// Use these if we need to get excel file path or file object
+			//URL url = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
+			//ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			//excelFile = new File(url.getPath());
+			
+			XSSFWorkbook wb = new XSSFWorkbook(input);
 			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
 			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
 			while(itr.hasNext())
@@ -127,26 +150,63 @@ public class FileIO {
 		{
 			System.out.print(e);
 		}
-		
-		// Read excel file from geeks4geeks
-		
-//		BufferedReader br = new BufferedReader(new FileReader(file));
-//		String st;
-//		List<String> tempList = new ArrayList<String>();
-//		while ((st = br.readLine()) != null) {
-//			tempList.add(st.trim().toString());
-//		}
-//		for (int i = 0; i < tempList.size(); i++) {
-//			if (tempList.get(i).toString().contains("name:")) {
-//				map.put(tempList.get(i).trim().substring(6).toString(), tempList.get(i + 1).substring(9).toString());
-//			}
-//		}
-//		br.close();
+	}
+	
+	public static List<Person> ReadFileAndBuildPeople()
+	{
+		List<Person> personList = new ArrayList<Person>();
+		PersonFactory personFactory = new PersonFactory();
+        StringBuilder sb = new StringBuilder();
+        String strLine = "";
+        try {
+        	 URL url = FileDisplay.class.getResource("input_sample2.txt");
+        	 String path = url.getPath();
+        	 String newPath = path.replace("%20", " ");
+             BufferedReader br = new BufferedReader(new FileReader(newPath));
+             String name = null;
+             String address = null; // use this to get just zip code and state of address then split them
+             String state = null;
+             String zipCode = null;
+             boolean nameFlag = false;
+             boolean addressFlag = false;
+             while (strLine != null)
+             { 
+                if(strLine.contains("name"))
+                {
+                	name = strLine.replace("name: ", "");
+                	nameFlag = true;
+                }
+                else if(strLine.contains("address"))
+                {
+                	address = strLine.substring(strLine.length()-9);
+                	state = address.substring(0,2);
+                	zipCode = address.substring(4,9);
+                	nameFlag = true;
+                	addressFlag = true;
+                }
+                if(nameFlag == true && addressFlag == true)
+                {
+                	// Build new person once name, state, and zipcode are found
+                	personList.add(PersonFactory.buildPerson(name, state, zipCode));
+                	name = null;
+                	state = null;
+                	zipCode = null;
+                	nameFlag = false;
+                	addressFlag = false;
+                }
+                strLine = br.readLine();
+             }             
+             br.close();
+        } catch (FileNotFoundException e) {
+            //System.err.println("File not found");
+        } catch (IOException e) {
+            //System.err.println("Unable to read the file.");
+        }        
+        return personList;
 	}
 
 	// return map information
-	public Map<String, String> getMap(String file) throws IOException {
-		//readFile(file);
-		return map;
+	public static Map<String, String> getMap() throws IOException {
+		return zipCodeMap;
 	}
 }

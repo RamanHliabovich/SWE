@@ -14,9 +14,9 @@ public class Computation {
 
 	private Map<String, String> mapList;
 
-	public Computation(String file) throws IOException {
+	public Computation() throws IOException {
 		FileIO f = FileIO.getInstance();
-		mapList = f.getMap(file);
+		mapList = f.getMap();
 	}
 
 	//print name and zip code

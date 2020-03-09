@@ -17,11 +17,14 @@ public class FileIO {
 
 	private static Map<String, String> map = new HashMap<String, String>();
 
-//Task2 : Solution-B (line 27-line36)
 	private static FileIO instance = null;
 
+	// Constructor
 	private FileIO() {
+		
 	}
+	
+	// Enables singleton
 	public static FileIO getInstance() {
 		if(instance==null) {
 			instance=new FileIO();
@@ -29,12 +32,74 @@ public class FileIO {
 		return instance;
 	}
 
-	// read .txt file, read data and save data in map
-	public static void readFile(InputStream fis) throws IOException {
+	// Read excel file return data in map
+	public static Map<String,String> storeExcelFile(InputStream fis) throws IOException {
+		Map<String,String> map = new HashMap<String,String>();
+		int rowCount = 0;
+		int colCount = 0;	
 		try
 		{
-			//File f1 = new File(file); //creating a new file instance
-			//FileInputStream fis = new FileInputStream(f1); //obtaining bytes from the file
+			XSSFWorkbook wb = new XSSFWorkbook(fis);
+			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
+			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
+			while(itr.hasNext())
+			{
+				rowCount++;
+				colCount = 0;
+				String state = null;
+				String zipCodeStart = null;
+				String zipCodeEnd = null;
+				String zipCode = null;
+				Row row = itr.next();
+				Iterator<Cell> cellIterator = row.cellIterator();
+				while(cellIterator.hasNext())
+				{
+					colCount++;
+					Cell cell = cellIterator.next();				
+					if(rowCount > 1)
+					{
+						if(colCount > 2)
+						{
+							switch(cell.getCellType())
+							{
+							case Cell.CELL_TYPE_STRING:
+								if(colCount == 3)
+									state = cell.getStringCellValue();
+								else if(colCount == 4)
+									zipCodeStart = cell.getStringCellValue();
+								else if(colCount == 5)
+									zipCodeEnd = cell.getStringCellValue();
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								Double doubleValue = cell.getNumericCellValue();
+								int intValue = doubleValue.intValue();
+								if(colCount == 4)
+									zipCodeStart = Integer.toString(intValue);
+								else if(colCount == 5)
+									zipCodeEnd = Integer.toString(intValue);
+								break;	
+							}	
+						}
+					}
+					if(state != null && zipCodeStart != null && zipCodeEnd != null)
+					{
+						zipCode = zipCodeStart + " " + zipCodeEnd; 
+						map.put(state, zipCode);	
+					}
+				}
+			}
+		}catch(Exception e)
+		{
+			System.out.print(e);
+		}
+		return map;
+	}
+	
+	
+	// Use this to output excel file to console after it's read
+	public static void outputExcelFile(InputStream fis) throws IOException {
+		try
+		{
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
 			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
 			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
@@ -51,7 +116,8 @@ public class FileIO {
 						System.out.print(cell.getStringCellValue() + "\t\t\t");
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						System.out.print(cell.getNumericCellValue() + "\t\t\t");
+						Double value = cell.getNumericCellValue();
+						System.out.print(value.intValue() + "\t\t\t");
 						break;
 					}
 				}

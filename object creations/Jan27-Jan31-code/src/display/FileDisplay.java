@@ -41,6 +41,7 @@ public class FileDisplay {
 		FileIO singleton = FileIO.getInstance();
 		try {
 			singleton.storeExcelFile();
+			singleton.outputExcelFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -54,8 +55,10 @@ public class FileDisplay {
 	{
 		FileIO singleton = FileIO.getInstance();
 		List<Person> personList = singleton.ReadFileAndBuildPeople();
+		
     }
 	
+	// Ignore this it was just to test code for the factory
 	//public static void CreateNewPerson(String name, String state, String zipCode)
 	//{
 	//	Person person = null;

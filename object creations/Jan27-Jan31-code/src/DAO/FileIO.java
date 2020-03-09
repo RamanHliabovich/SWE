@@ -103,6 +103,7 @@ public class FileIO {
 					map.put(state, zipCode);	
 				}
 			}
+			wb.close();
 		}catch(Exception e)
 		{
 			System.out.print(e);
@@ -178,9 +179,10 @@ public class FileIO {
                 }
                 else if(strLine.contains("address"))
                 {
-                	address = strLine.substring(strLine.length()-9);
-                	state = address.substring(0,2);
-                	zipCode = address.substring(4,9);
+                	String[] parts = strLine.split(",");
+                	//address = strLine.substring(strLine.length()-9);
+                	state = parts[2].substring(1,3);
+                	zipCode = parts[3].substring(1,parts[3].length());
                 	nameFlag = true;
                 	addressFlag = true;
                 }

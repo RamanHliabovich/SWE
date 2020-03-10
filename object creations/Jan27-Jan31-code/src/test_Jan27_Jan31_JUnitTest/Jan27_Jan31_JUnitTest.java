@@ -12,9 +12,9 @@ class Jan27_Jan31_JUnitTest {
 
 	@Test
 	void test() {
-//		FileIO f1 = new FileIO();
-//		FileIO f2 = new FileIO();
-//		assertEquals(f1, f2);
+		FileIO f1 = FileIO.getInstance();
+		FileIO f2 = FileIO.getInstance();
+		assertEquals(f1, f2);
 	}
 
 }

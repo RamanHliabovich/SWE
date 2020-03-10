@@ -11,10 +11,9 @@ import DAO.FileIO;
 class Jan27_Jan31_JUnitTest {
 
 	@Test
-	void test() {
+	void singletonTest() {
 		FileIO f1 = FileIO.getInstance();
 		FileIO f2 = FileIO.getInstance();
 		assertEquals(f1, f2);
 	}
-
 }

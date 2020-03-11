@@ -1,5 +1,5 @@
 package DAO;
 
 public enum PersonType {
-	CORRECT, INCORRECT
+	VALID, INVALID, RED, BLUE
 }

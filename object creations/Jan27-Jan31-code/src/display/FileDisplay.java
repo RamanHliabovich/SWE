@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import DAO.FileIO;
 import DAO.Person;
+import DAO.PersonCache;
 import DAO.PersonFactory;
 import business_logic.Computation;
 
@@ -23,11 +25,15 @@ public class FileDisplay {
 	{	
 		System.out.println("RUNNING SINGLETON PART 1... \n");
 		// Run Singleton 
-		//SingletonRead();
+		SingletonRead();
 		
-		System.out.println("\nRUNNING FACTORY METHOD PART 2... \n");
+		System.out.println("\n\nRUNNING FACTORY METHOD PART 2... \n");
 		// Run Factory that reads text file and builds person objects and prints results
 		FactoryRead();
+		
+		System.out.println("\n\nRUNNING PROTOTYPE METHOD PART 3... \n");
+		RunPrototype();
+
 				
 		// Computation code that was here before
 		//Computation file1 = new Computation("Jan27-Jan31-input-sample.txt");
@@ -38,9 +44,10 @@ public class FileDisplay {
 
 	public static void SingletonRead()
 	{
-		FileIO singleton = FileIO.getInstance();
 		try {
-			singleton.storeExcelFile();
+			// this initiates FileIO and stores excel file in map
+			FileIO singleton = FileIO.getInstance();
+			// Use this to output results of storing excel file
 			singleton.outputExcelFile();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,16 +57,46 @@ public class FileDisplay {
 	// 1. read text file in
 	// 2. find name, state, and zip code for each person
 	// 3. Call PersonFactory and build new person with these paramaters
-	// 4. output results and test with own text info	
+	// 4. output results and test with own text info
 	private static void FactoryRead()
 	{
-		FileIO singleton = FileIO.getInstance();
-		List<Person> personList = singleton.ReadFileAndBuildPeople();
-		for(Person person : personList)
-		{
-			person.displayInfo();
+		try {
+			Computation computation = new Computation();
+			List<Person> personList = computation.ReadFileAndBuildPeople();
+			for(Person person : personList)
+			{
+				person.displayInfo();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
     }
+	
+	private static void RunPrototype()
+	{
+		try {
+			// Initiate computation and retrieve the person list to clone and get political demographic
+			Computation computation = new Computation();
+			List<Person> personList = computation.ReadFileAndBuildPeople();
+			List<Person> newPersonList = new ArrayList<Person>();
+			PersonCache personCache = new PersonCache();
+			personCache.LoadCache(personList);
+			
+			Person clonedPerson = null;
+			
+			for(Person person : personList)
+			{
+				clonedPerson = personCache.getClonedPerson(person.getName());
+				clonedPerson.displayInfo();
+				newPersonList.add(clonedPerson);
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	// Ignore this it was just to test code for the factory
 	//public static void CreateNewPerson(String name, String state, String zipCode)

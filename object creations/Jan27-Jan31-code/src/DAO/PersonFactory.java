@@ -21,11 +21,11 @@ public class PersonFactory {
 		int zipCodeInt = Integer.parseInt(zipCode);
 		if(zipCodeInt > zipCodeMinInt && zipCodeInt < zipCodeMaxInt)
 		{
-			person = new CorrectPerson(name, state, zipCode);
+			person = new ValidPerson(name, state, zipCode);
 		}
 		else 
 		{
-			person = new IncorrectPerson(name, state, zipCode);
+			person = new InvalidPerson(name, state, zipCode);
 		}
 		return person;
 	}

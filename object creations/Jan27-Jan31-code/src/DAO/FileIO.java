@@ -45,7 +45,7 @@ public class FileIO {
 	}
 
 	// Read excel file return data in map
-	public static Map<String,String> storeExcelFile() throws IOException {
+	public Map<String,String> storeExcelFile() throws IOException {
 		Map<String,String> map = new HashMap<String,String>();
 		int rowCount = 0;
 		int colCount = 0;	
@@ -113,7 +113,7 @@ public class FileIO {
 	
 	
 	// Use this to output excel file to console after it's read
-	public static void outputExcelFile() throws IOException {
+	public void outputExcelFile() throws IOException {
 		try
 		{
 			// Get excel file into InputStream object
@@ -152,74 +152,7 @@ public class FileIO {
 			System.out.print(e);
 		}
 	}
-	
-	public static List<Person> ReadFileAndBuildPeople()
-	{
-		List<Person> personList = new ArrayList<Person>();
-		PersonFactory personFactory = new PersonFactory();
-        StringBuilder sb = new StringBuilder();
-        String strLine = "";
-        try {
-        	 URL url = FileDisplay.class.getResource("input_sample2.txt");
-        	 String path = url.getPath();
-        	 String newPath = path.replace("%20", " ");
-             BufferedReader br = new BufferedReader(new FileReader(newPath));
-             String name = null;
-             String address = null; // use this to get just zip code and state of address then split them
-             String state = null;
-             String zipCode = null;
-             boolean nameFlag = false;
-             boolean addressFlag = false;
-             while (strLine != null)
-             { 
-                if(strLine.contains("name"))
-                {
-                	name = strLine.replace("name: ", "");
-                	nameFlag = true;
-                	
-                }
-                else if(strLine.contains("address"))
-                {
-                	String[] parts = strLine.split(",");
-                	// Adjust for extra comma in this address
-                	if(name.contains("Carlos Thompson") || name.contains("Christopher Turner"))
-                	{
-                		state = parts[3].substring(1,3);
-                    	zipCode = parts[4].substring(1,parts[4].length());
-                	}
-                	else if(name.contains("Tammy Simmons") || name.contains("Gregory White"))
-                	{
-                		state = parts[1].substring(1,3);
-                    	zipCode = parts[2].substring(1,parts[2].length());
-                	}
-                	else
-                	{
-                    	state = parts[2].substring(1,3);
-                    	zipCode = parts[3].substring(1,parts[3].length());	
-                	}
-                	nameFlag = true;
-                	addressFlag = true;
-                }
-                if(nameFlag == true && addressFlag == true)
-                {
-                	// Build new person once name, state, and zipcode are found
-                	personList.add(PersonFactory.buildPerson(name, state, zipCode));
-                	name = null;
-                	state = null;
-                	zipCode = null;
-                	nameFlag = false;
-                	addressFlag = false;
-                }
-                strLine = br.readLine();
-             }             
-             br.close();
-        } catch (FileNotFoundException e) {
-            //System.err.println("File not found");
-        } catch (IOException e) {
-            //System.err.println("Unable to read the file.");
-        }        
-        return personList;
-	}
+
 
 	// return map information
 	public static Map<String, String> getMap() throws IOException {

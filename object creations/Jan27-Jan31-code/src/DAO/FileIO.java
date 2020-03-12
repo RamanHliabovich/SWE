@@ -1,17 +1,9 @@
 package DAO;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -22,10 +14,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import display.FileDisplay;
 
 public class FileIO {
-
-	private static Map<String, String> zipCodeMap = new HashMap<String, String>();
-
+	// Singleton instance being created
 	private static FileIO instance = null;
+	
+	// Enables singleton
+	public static FileIO getInstance() {
+		if(instance==null) {
+			instance=new FileIO();
+		}
+		return instance;
+	}
+	
+	// Hash map construction for zip codes
+	private static Map<String, String> zipCodeMap = new HashMap<String, String>();
 
 	// Constructor that calls function to store excel file in map
 	private FileIO() {
@@ -35,30 +36,20 @@ public class FileIO {
 			e.printStackTrace();
 		}
 	}
-	
-	// Enables singleton
-	public static FileIO getInstance() {
-		if(instance==null) {
-			instance=new FileIO();
-		}
-		return instance;
-	}
 
 	// Read excel file return data in map
+	@SuppressWarnings("deprecation")
 	public Map<String,String> storeExcelFile() throws IOException {
 		Map<String,String> map = new HashMap<String,String>();
 		int rowCount = 0;
 		int colCount = 0;	
-		try
-		{
+		try {
 			// Get excel file into InputStream object
 			InputStream input = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
-
 			XSSFWorkbook wb = new XSSFWorkbook(input);
-			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
-			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
-			while(itr.hasNext())
-			{
+			XSSFSheet sheet = wb.getSheetAt(0); // Creating a Sheet object to retrieve object
+			Iterator<Row> itr = sheet.iterator(); // Iterating over excel file
+			while(itr.hasNext()) {
 				rowCount++;
 				colCount = 0;
 				String state = null;
@@ -67,16 +58,12 @@ public class FileIO {
 				String zipCode = null;
 				Row row = itr.next();
 				Iterator<Cell> cellIterator = row.cellIterator();
-				while(cellIterator.hasNext())
-				{
+				while(cellIterator.hasNext()) {
 					colCount++;
 					Cell cell = cellIterator.next();				
-					if(rowCount > 1)
-					{
-						if(colCount > 2)
-						{
-							switch(cell.getCellType())
-							{
+					if(rowCount > 1) {
+						if(colCount > 2) {
+							switch(cell.getCellType()) {
 							case Cell.CELL_TYPE_STRING:
 								if(colCount == 3)
 									state = cell.getStringCellValue();
@@ -97,45 +84,33 @@ public class FileIO {
 						}
 					}
 				}
-				if(state != null && zipCodeStart != null && zipCodeEnd != null)
-				{
+				if(state != null && zipCodeStart != null && zipCodeEnd != null) {
 					zipCode = zipCodeStart + " " + zipCodeEnd; 
 					map.put(state, zipCode);	
 				}
 			}
 			wb.close();
-		}catch(Exception e)
-		{
+		} catch(Exception e) {
 			System.out.print(e);
 		}
 		return map;
 	}
 	
-	
 	// Use this to output excel file to console after it's read
+	@SuppressWarnings("deprecation")
 	public void outputExcelFile() throws IOException {
-		try
-		{
+		try {
 			// Get excel file into InputStream object
 			InputStream input = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
-
-			// Use these if we need to get excel file path or file object
-			//URL url = FileDisplay.class.getResourceAsStream("zipCode_info.xlsx");
-			//ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			//excelFile = new File(url.getPath());
-			
 			XSSFWorkbook wb = new XSSFWorkbook(input);
-			XSSFSheet sheet = wb.getSheetAt(0); //creating a Sheet object to retrieve object
-			Iterator<Row> itr = sheet.iterator(); //iterating over excel file
-			while(itr.hasNext())
-			{
+			XSSFSheet sheet = wb.getSheetAt(0); // Creating a Sheet object to retrieve object
+			Iterator<Row> itr = sheet.iterator(); // Iterating over excel file
+			while(itr.hasNext()) {
 				Row row = itr.next();
 				Iterator<Cell> cellIterator = row.cellIterator();
-				while(cellIterator.hasNext())
-				{
+				while(cellIterator.hasNext()) {
 					Cell cell = cellIterator.next();
-					switch(cell.getCellType())
-					{
+					switch(cell.getCellType())	{
 					case Cell.CELL_TYPE_STRING:
 						System.out.print(cell.getStringCellValue() + "\t\t\t");
 						break;
@@ -148,14 +123,12 @@ public class FileIO {
 				System.out.println("");
 			}
 			wb.close();
-		}catch(Exception e)
-		{
+		} catch(Exception e) {
 			System.out.print(e);
 		}
 	}
 
-
-	// return map information
+	// Return map information
 	public static Map<String, String> getMap() throws IOException {
 		return zipCodeMap;
 	}

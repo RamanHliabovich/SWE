@@ -1,17 +1,7 @@
 package DAO;
 
 public abstract class Person implements Cloneable{
-	
-	public Person(PersonType type, String name, String state, String zipCode)
-	{
-		this.type = type;
-		this.name = name;
-		this.state = state;
-		this.zipCode = zipCode;
-	}
-	
-	protected abstract void construct();
-	
+	// Instantiation of variables for a person's information
 	private String name = null;
 	
 	private String state = null;
@@ -20,17 +10,29 @@ public abstract class Person implements Cloneable{
 	
 	private PersonType type = null;
 	
+	// Setter for people and their information
+	public Person(PersonType type, String name, String state, String zipCode) {
+		this.type = type;
+		this.name = name;
+		this.state = state;
+		this.zipCode = zipCode;
+	}
+	
+	//
+	protected abstract void construct();
+	
+	// 
 	public Object getClone() {
 		Object clone = null;
-		
 		try {
 			clone = super.clone();
-		}catch (CloneNotSupportedException e) {
+		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 		return clone;
 	}
 	
+	// Getters for people and their information
 	public PersonType getType() {
 		return type;
 	}
@@ -47,6 +49,7 @@ public abstract class Person implements Cloneable{
 		return name;
 	}
 	
+	// Display function for people and their information
 	public void displayInfo() {
 		System.out.println("\n" + name + " " + state + " " + zipCode + " " + type.toString());
 	}

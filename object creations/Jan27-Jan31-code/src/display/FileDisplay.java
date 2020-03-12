@@ -1,28 +1,20 @@
 package display;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 
 import DAO.FileIO;
 import DAO.Person;
 import DAO.PersonCache;
-import DAO.PersonFactory;
+
 import business_logic.Computation;
 
 public class FileDisplay {
-	
-	public static void main(String[] args) throws IOException 
-	{	
+	//
+	public static void main(String[] args) throws IOException  {	
 		System.out.println("RUNNING SINGLETON PART 1... \n");
 		// Run Singleton 
 		SingletonRead();
@@ -34,16 +26,15 @@ public class FileDisplay {
 		System.out.println("\n\nRUNNING PROTOTYPE METHOD PART 3... \n");
 		RunPrototype();
 
-				
 		// Computation code that was here before
 		//Computation file1 = new Computation("Jan27-Jan31-input-sample.txt");
 		//for (String a : file1.printAllNameAndZipCode()) {
-			//System.out.println(a);
+		//	System.out.println(a);
 		//}
 	}
-
-	public static void SingletonRead()
-	{
+	
+	//
+	public static void SingletonRead() {
 		try {
 			// this initiates FileIO and stores excel file in map
 			FileIO singleton = FileIO.getInstance();
@@ -54,17 +45,15 @@ public class FileDisplay {
 		}
 	}
 	
-	// 1. read text file in
-	// 2. find name, state, and zip code for each person
+	// 1. Read text file in
+	// 2. Find name, state, and zip code for each person
 	// 3. Call PersonFactory and build new person with these paramaters
-	// 4. output results and test with own text info
-	private static void FactoryRead()
-	{
+	// 4. Output results and test with own text info
+	private static void FactoryRead() {
 		try {
 			Computation computation = new Computation();
 			List<Person> personList = computation.ReadFileAndBuildPeople();
-			for(Person person : personList)
-			{
+			for(Person person : personList) {
 				person.displayInfo();
 			}
 		} catch (IOException e) {
@@ -73,6 +62,7 @@ public class FileDisplay {
 		}
     }
 	
+	//
 	private static void RunPrototype()
 	{
 		try {
@@ -82,16 +72,12 @@ public class FileDisplay {
 			List<Person> newPersonList = new ArrayList<Person>();
 			PersonCache personCache = new PersonCache();
 			personCache.LoadCache(personList);
-			
 			Person clonedPerson = null;
-			
-			for(Person person : personList)
-			{
+			for(Person person : personList) {
 				clonedPerson = personCache.getClonedPerson(person.getName());
 				clonedPerson.displayInfo();
 				newPersonList.add(clonedPerson);
 			}
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,12 +94,10 @@ public class FileDisplay {
 	//	int zipCodeMinInt = Integer.parseInt(zipCodeMin);
 	//	int zipCodeMaxInt = Integer.parseInt(zipCodeMax);
 	//	int zipCodeInt = Integer.parseInt(zipCode);
-	//	if(zipCodeInt > zipCodeMinInt && zipCodeInt < zipCodeMaxInt)
-	//	{
+	//	if(zipCodeInt > zipCodeMinInt && zipCodeInt < zipCodeMaxInt) {
 	//		person = new CorrectPerson(name, state, zipCode);
 	//	}
-	//	else 
-	//	{
+	//	else  {
 	//		person = new IncorrectPerson(name, state, zipCode);
 	//	}
 	//}

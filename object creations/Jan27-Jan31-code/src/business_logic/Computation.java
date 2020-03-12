@@ -1,5 +1,4 @@
 package business_logic;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,33 +13,33 @@ import DAO.Person;
 import DAO.PersonFactory;
 import display.FileDisplay;
 
-public class Computation{
-
+public class Computation {
+	//
 	public int counter = 0;
-
+	
+	//
 	private Map<String, String> zipCodeMap;
 
-	public Computation() throws IOException{
+	//
+	public Computation() throws IOException {
 		FileIO f = FileIO.getInstance();
 		zipCodeMap = f.getMap();
 	}
 	
-	public Object clone()
-	{
+	//
+	public Object clone() {
 		Object clone = null;
-		try
-		{
+		try {
 			clone = super.clone();
 		}
-		catch (CloneNotSupportedException e)
-		{
+		catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 		return clone;
 	}
 	
-	public List<Person> ReadFileAndBuildPeople()
-	{
+	//
+	public List<Person> ReadFileAndBuildPeople() {
 		List<Person> personList = new ArrayList<Person>();
         String strLine = "";
         try {
@@ -54,38 +53,30 @@ public class Computation{
              String zipCode = null;
              boolean nameFlag = false;
              boolean addressFlag = false;
-             while (strLine != null)
-             { 
-                if(strLine.contains("name"))
-                {
+             while (strLine != null) { 
+                if(strLine.contains("name")) {
                 	name = strLine.replace("name: ", "");
                 	nameFlag = true;
-                	
                 }
-                else if(strLine.contains("address"))
-                {
+                else if(strLine.contains("address")) {
                 	address = strLine.split(",");
                 	// Adjust for different amount of commas in these name addresses
-                	if(name.contains("Carlos Thompson") || name.contains("Christopher Turner"))
-                	{
+                	if(name.contains("Carlos Thompson") || name.contains("Christopher Turner")) {
                 		state = address[3].substring(1,3);
                     	zipCode = address[4].substring(1,address[4].length());
                 	}
-                	else if(name.contains("Tammy Simmons") || name.contains("Gregory White"))
-                	{
+                	else if(name.contains("Tammy Simmons") || name.contains("Gregory White")) {
                 		state = address[1].substring(1,3);
                     	zipCode = address[2].substring(1,address[2].length());
                 	}
-                	else
-                	{
+                	else {
                     	state = address[2].substring(1,3);
                     	zipCode = address[3].substring(1,address[3].length());	
                 	}
                 	nameFlag = true;
                 	addressFlag = true;
                 }
-                if(nameFlag == true && addressFlag == true)
-                {
+                if(nameFlag == true && addressFlag == true) {
                 	// Build new person once name, state, and zipcode are found
                 	personList.add(PersonFactory.buildPerson(name, state, zipCode));
                 	name = null;
@@ -104,23 +95,4 @@ public class Computation{
         }        
         return personList;
 	}
-
-	//print name and zip code
-//	public List<String> printAllNameAndZipCode() {
-//		Set set = mapList.entrySet();// Converting to Set so that we can traverse
-//		Iterator itr = set.iterator();
-//		List<String> printList = new ArrayList<String>();
-//		while (itr.hasNext()) {
-//			// Converting to Map.Entry so that we can get key and value separately
-//			Map.Entry entry = (Map.Entry) itr.next();
-//			String firstName = entry.getKey().toString().split(" ")[0].toString();
-//			String lastName = entry.getKey().toString().split(" ")[1].toString();
-//			String[] address = entry.getValue().toString().split(",");
-//			String zipCode = entry.getValue().toString().split(",")[address.length - 1];
-//			printList.add("First name: " + firstName);
-//			printList.add("Last name: " + lastName);
-//			printList.add("ZIP Code: " + zipCode);
-//		}
-//		return printList;
-//	}
 }

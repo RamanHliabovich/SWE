@@ -19,7 +19,7 @@ public class PersonFactory {
 		int zipCodeMinInt = Integer.parseInt(zipCodeMin);
 		int zipCodeMaxInt = Integer.parseInt(zipCodeMax);
 		int zipCodeInt = Integer.parseInt(zipCode);
-		if(zipCodeInt > zipCodeMinInt && zipCodeInt < zipCodeMaxInt)
+		if(zipCodeInt >= zipCodeMinInt && zipCodeInt <= zipCodeMaxInt)
 		{
 			person = new ValidPerson(name, state, zipCode);
 		}

@@ -60,6 +60,7 @@ public class PersonCache {
 				stateMap.put(stateName, stateType);
 				rowCount++;
 			}
+			wb.close();
 		}catch(Exception e)
 		{
 			System.out.print(e);

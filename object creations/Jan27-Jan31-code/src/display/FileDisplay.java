@@ -49,7 +49,7 @@ public class FileDisplay {
 	// 2. Find name, state, and zip code for each person
 	// 3. Call PersonFactory and build new person with these paramaters
 	// 4. Output results and test with own text info
-	private static void FactoryRead() {
+	public static void FactoryRead() {
 		try {
 			Computation computation = new Computation();
 			List<Person> personList = computation.ReadFileAndBuildPeople();

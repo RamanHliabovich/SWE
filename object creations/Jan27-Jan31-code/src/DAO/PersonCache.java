@@ -17,7 +17,7 @@ public class PersonCache {
 	Map<String, String> stateMap = new HashMap<String, String>();
 	
 	// Instantiation of a person hash map
-	Map<String, Person> personMap = new HashMap<String, Person>();
+	static Map<String, Person> personMap = new HashMap<String, Person>();
 	
 	//
 	public void LoadCache(List<Person> personList) {
@@ -52,6 +52,7 @@ public class PersonCache {
 		} catch(Exception e) {
 			System.out.print(e);
 		}
+		//
 		String stateColor;
 		for(Person person : personList) {
 			stateColor = stateMap.get(person.getState());
@@ -67,7 +68,7 @@ public class PersonCache {
 	}
 	
 	//
-	public Person getClonedPerson(String name) {
+	public static Person getClonedPerson(String name) {
 		Person cachedPerson = personMap.get(name);
 		return (Person) cachedPerson.getClone();
 	}

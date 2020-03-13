@@ -67,7 +67,7 @@ class Jan27_Jan31_JUnitTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Person test1 = PersonFactory.buildPerson("Test Test", "AK", "99750"); // Inbetween range test
+		Person test1 = PersonFactory.buildPerson("Test Test", "AK", "99750"); // In-between range test
 		String string1 = test1.getName() + " " + test1.getState() + " " + test1.getZipCode() + " " + test1.getType().toString();
 		System.out.println(string1);
 		assertEquals(string1, "Test Test AK 99750 VALID");
